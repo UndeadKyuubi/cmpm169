@@ -1,67 +1,112 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch.js - An aquarium with generatively flowing water and fish that follow the cursor
+// Author: Brandon Jacobson
+// Date: Jan. 29, 2024
 
-// Here is how you might set up an OOP p5.js project
-// Note that p5.js looks for a file called sketch.js
-
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
-
-// Globals
-let myInstance;
-let canvasContainer;
-
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
+class Fish {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.angle = 0;
+      this.color = color(random(255), random(255), random(255));
+      this.size = 20;
+      this.speed = 15;
+      this.radius = this.size * 2;
     }
-
-    myMethod() {
-        // code to run when method is called
+    
+    seek(targetX, targetY) {
+      let angleToTarget = atan2(targetY - this.y, targetX - this.x);
+      this.angle = lerp(this.angle, angleToTarget, 0.1);
+  
+      this.x += cos(this.angle) * this.speed;
+      this.y += sin(this.angle) * this.speed;
     }
-}
-
-// setup() function is called once when the program starts
-function setup() {
-    // place our canvas, making it fit our container
+    
+    avoid(otherFish) {
+      for (let fish of otherFish) {
+        let d = dist(this.x, this.y, fish.x, fish.y);
+  
+        if (d > 0 && d < this.radius) {
+          let angleAway = atan2(this.y - fish.y, this.x - fish.x);
+          this.angle = lerp(this.angle, angleAway + PI, 0.1);
+  
+          this.x += cos(this.angle) * this.speed;
+          this.y += sin(this.angle) * this.speed;
+          break;
+        }
+      }
+    }
+  
+    update(targetX, targetY, otherFish) {
+      this.seek(targetX, targetY);
+      this.avoid(otherFish);
+    }
+  
+    display() {
+      push();
+      translate(this.x, this.y);
+      rotate(this.angle);
+      
+      fill(this.color);
+      triangle(0, 0, -50, 50, -50, -50);
+      ellipse(5, 0, 100, 50);
+      fill(0);
+      circle(45, 0, 10);
+      
+      pop();
+    }
+  }
+  
+  let time = 0.0;
+  let noiseStrength = 100;
+  let fishArray = [];
+  
+  function setup() {
     canvasContainer = $("#canvas-container");
     let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
     canvas.parent("canvas-container");
-    // resize canvas is the page is resized
+  
     $(window).resize(function() {
-        console.log("Resizing...");
-        resizeCanvas(canvasContainer.width(), canvasContainer.height());
-    });
-    // create an instance of the class
-    myInstance = new MyClass(VALUE1, VALUE2);
-
-    var centerHorz = windowWidth / 2;
-    var centerVert = windowHeight / 2;
-}
-
-// draw() function is called repeatedly, it's the main animation loop
-function draw() {
-    background(220);    
-    // call a method on the instance
-    myInstance.myMethod();
-
-    // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
+      console.log("Resizing...");
+      resizeCanvas(canvasContainer.width(), canvasContainer.height());
+    })
+    
     noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
-}
-
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
-}
+    
+    for (let i = 0; i < 10; i++) {
+      fishArray.push(new Fish(random(width), random(height)));
+    }
+  }
+  
+  function draw() {
+    background(0);
+  
+    for (let y = 0; y < height; y += 10) {
+      for (let x = 0; x < width; x += 10) {
+        
+        let noiseValue = noise(
+          (x + mouseX * 0.01) * 0.01,
+          (y + mouseY * 0.01) * 0.01,
+          time
+        );
+  
+        let displacement = map(noiseValue, 0, 1, -noiseStrength, noiseStrength);
+  
+        let noiseColor = map(noiseValue, 0, 1, 0, 150);
+        fill(noiseColor, 50, 150, 150);
+        ellipse(x + displacement, y, 10, 10);
+      }
+    }
+    
+    for (let i = 0; i < fishArray.length; i++) {
+      let targetX = mouseX;
+      let targetY = mouseY;
+  
+      let others = fishArray.slice();
+      others.splice(i, 1); 
+  
+      fishArray[i].update(targetX, targetY, others);
+      fishArray[i].display();
+    }
+  
+    time += 0.02;
+  }
