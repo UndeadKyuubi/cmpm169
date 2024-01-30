@@ -8,8 +8,8 @@ class Fish {
       this.y = y;
       this.angle = 0;
       this.color = color(random(255), random(255), random(255));
-      this.size = 20;
-      this.speed = 15;
+      this.size = 15;
+      this.speed = 10;
       this.radius = this.size * 2;
     }
     
@@ -69,7 +69,7 @@ class Fish {
       console.log("Resizing...");
       resizeCanvas(canvasContainer.width(), canvasContainer.height());
     })
-    
+
     noStroke();
     
     for (let i = 0; i < 10; i++) {
