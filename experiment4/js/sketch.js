@@ -13,8 +13,8 @@ let moving = false;
 let amplitude;
 
 function preload() {
-    photo = loadImage("js/images/sam.jpg");
-    sound = loadSound("js/sounds/spoiler.mp3");
+    photo = loadImage("images/sam.jpg");
+    sound = loadSound("sounds/spoiler.mp3");
 }
 
 function setup() {
