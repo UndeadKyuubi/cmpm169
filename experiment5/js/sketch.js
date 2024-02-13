@@ -1,67 +1,99 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch.js - A 3D display of a neco arc model with user functionality.
+// Author: Brandon Jacobson
+// Date: Feb. 12th 2024
 
-// Here is how you might set up an OOP p5.js project
-// Note that p5.js looks for a file called sketch.js
+let necoarc
 
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
+let scaleAmount = 100;
+let rotateXAmount = 0;
+let rotateYAmount = 0;
+let rotateZAmount = 0;
+let translateXAmount = 0;
+let translateYAmount = 150;
+let translateZAmount = 0;
 
-// Globals
-let myInstance;
-let canvasContainer;
+let autoRotateY = true;
 
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
-    }
+let redValue = 255;
+let greenValue = 255;
+let blueValue = 255;
 
-    myMethod() {
-        // code to run when method is called
-    }
+function preload(){
+  necoarc = loadModel('models/necoarc.obj')
 }
 
-// setup() function is called once when the program starts
 function setup() {
-    // place our canvas, making it fit our container
-    canvasContainer = $("#canvas-container");
-    let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
-    canvas.parent("canvas-container");
-    // resize canvas is the page is resized
-    $(window).resize(function() {
-        console.log("Resizing...");
-        resizeCanvas(canvasContainer.width(), canvasContainer.height());
-    });
-    // create an instance of the class
-    myInstance = new MyClass(VALUE1, VALUE2);
+  canvasContainer = $("#canvas-container");
+  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height(), WEBGL);
+  canvas.parent("canvas-container");
 
-    var centerHorz = windowWidth / 2;
-    var centerVert = windowHeight / 2;
+  $(window).resize(function() {
+    console.log("Resizing...");
+    resizeCanvas(canvasContainer.width(), canvasContainer.height());
+  })
+  
+  rotateYAmount = HALF_PI;
+  rotateXAmount = PI
 }
 
-// draw() function is called repeatedly, it's the main animation loop
 function draw() {
-    background(220);    
-    // call a method on the instance
-    myInstance.myMethod();
-
-    // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
-    noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
+  background(0)
+  pointLight(redValue, greenValue, blueValue, 0, 0, 75 + translateZAmount);
+  ambientLight(150, 120, 0)
+  translate(translateXAmount, translateYAmount, translateZAmount);
+  scale(scaleAmount);
+  
+  if (autoRotateY) {
+    rotateYAmount += 0.01;
+  }
+  
+  rotateX(rotateXAmount);
+  rotateY(rotateYAmount);
+  rotateZ(rotateZAmount);
+  shininess(10)
+  specularMaterial(255, 215, 0)
+  noStroke()
+  model(necoarc)
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    scaleAmount *= 1.1;
+  } else if (keyCode === DOWN_ARROW) {
+    scaleAmount *= 0.9;
+  }
+  
+  if (key === 'W' || key === 'w') {
+    translateYAmount -= 10;
+  } else if (key === 'S' || key === 's') {
+    translateYAmount += 10;
+  } else if (key === 'A' || key === 'a') {
+    translateXAmount -= 10;
+  } else if (key === 'D' || key === 'd') {
+    translateXAmount += 10;
+  } else if (key === 'Q' || key === 'q') {
+    translateZAmount -= 10;
+  } else if (key === 'E' || key === 'e') {
+    translateZAmount += 10;
+  }
+  else if (key === 'R' || key === 'r') {
+    autoRotateY = !autoRotateY;
+  }
+}
+
+function mouseDragged() {
+  rotateYAmount += (pmouseX - mouseX) * 0.01;
+  rotateXAmount += (pmouseY - mouseY) * 0.01;
+  
+  document.getElementById('redSlider').addEventListener('input', function() {
+      redValue = this.value;
+    });
+
+  document.getElementById('greenSlider').addEventListener('input', function() {
+      greenValue = this.value;
+    });
+
+  document.getElementById('blueSlider').addEventListener('input', function() {
+      blueValue = this.value;
+    });
 }

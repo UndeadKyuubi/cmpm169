@@ -2,7 +2,7 @@
 <html>
 <head>
 	<!-- This title is used for tabs and bookmarks -->
-	<title>Experiment X - Subject/Topic</title>
+	<title>Experiment 5 - 3D Graphics</title>
 
 	<!-- Use UTF character set, a good idea with any webpage -->
 	<meta charset="UTF-8" />
@@ -28,34 +28,45 @@
 	<!-- Style this page by changing the CSS in ../css/site.css or css/experiment.css -->
 	<main id="content">
 		<section>
-			<h1>Experiment X - Subject/Topic</h1>
+			<h1>Experiment 5 - 3D Graphics</h1>
 			<div class="minor-section">
 				<h2>Imitate</h2>
 				<p>To develop artistic creativity in coding, it can be helpful to start by studying and learning from existing examples. This might involve reviewing code written by others, analyzing successful techniques, or even copying and modifying code to better understand how it works. By imitating and learning from existing techniques and strategies, we can gain a better understanding of what has been done before and what is possible, and identify opportunities for improvement and innovation.</p>
-				<p>What code did you start with? (You don't need to provide the code itself, but where did you start?) Document this step briefly.</p>
+				<p>I started by finding a sketch on Open Processing that I could follow to figure out how to import my own model into p5.js.</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Integrate</h2>
 				<p>After learning from existing techniques and strategies, we can build upon that foundation by combining elements from different sources. This might involve combining elements from different programming languages, using libraries or frameworks in new ways, or bringing together techniques from different fields or disciplines. By integrating and combining elements from different sources, we can create something new and unique.</p>
-				<p>How did you extend the code or combine with another technique to make something new? Document this step.</p>
+				<p>Once I got my own custom model impoted, I extended on it by changing it from a normal material to a specular one and adding ambient and point lights to have it reflect a golden looking color.</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Innovate</h2>
 				<p>Finally, we can introduce new or original ideas to our coding process by thinking creatively and pushing the boundaries. This might involve developing entirely new techniques or approaches, or using existing techniques in new and creative ways. By innovating and introducing new ideas, we can create art that is truly groundbreaking.</p>
-				<p>How did you use the code as a jumping off point to create something truly unique and novel? Document this step thoroughly.</p>
+				<p>Once I had the model and material properly rendered, I wanted to make it more interesting by letting the user have some interaction with the model. I made it so the user can transform, rotate, and scale the model. As well as enable/disbable an auto rotate function. I also added sliders in the .html to allow users to change the color of the reflecting light.</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
 				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment. Here's where you can put your reflections.</p>
 				<ul>
-					<li>What part of the project you contributed</li>
-					<li>A reflection on your work and the work of the team</li>
-					<li>Brief highs and lows</li>
+					<li>I worked alone on the experiment</li>
+					<li>I had a lot of fun with this experiment since I got to work with whatever model I wanted to. I also just enjoyed tweaking the different properties of the material and lights to see how it would affect the model.</li>
+					<li>This was the first time where I actually did not feel like I had many lows. I guess if anything, I would've maybe liked to find some other fun interaction for the model. The highest point in the experiment though was getting the nice shiny, golden color on the model. As well as getting the html sliders for the color to work since I don't have much experience with editing html files.</li>
 				</ul>
 			</div>
+
+			<div id="controls">
+				<label for="redSlider">Red:</label>
+				<input type="range" min="0" max="255" value="255" class="slider" id="redSlider">
+				<br>
+				<label for="greenSlider">Green:</label>
+				<input type="range" min="0" max="255" value="255" class="slider" id="greenSlider">
+				<br>
+				<label for="blueSlider">Blue:</label>
+				<input type="range" min="0" max="255" value="255" class="slider" id="blueSlider">
+			  </div>
 
 			<div class="minor-section">
 				<h2>Results</h2>
@@ -66,6 +77,7 @@
 		</section>
 		<nav id="links">
 			<!-- Put links to other pages (including the homepage) here. -->
+			<a href="../index.html">Home Page</a> 
 		</nav>
 	</main>
 </body>
