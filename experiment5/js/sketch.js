@@ -19,7 +19,7 @@ let greenValue = 255;
 let blueValue = 255;
 
 function preload(){
-  necoarc = loadModel('models/necoarc.obj')
+  necoarc = loadModel('js/models/necoarc.obj')
 }
 
 function setup() {
