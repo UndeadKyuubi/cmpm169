@@ -11,12 +11,12 @@ let isGameOver = false;
 
 function setup() {
     canvasContainer = $("#canvas-container");
-    let canvas = createCanvas(canvasContainer.width(), canvasContainer.height(), WEBGL);
+    let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
     canvas.parent("canvas-container");
-
+  
     $(window).resize(function() {
-        console.log("Resizing...");
-        resizeCanvas(canvasContainer.width(), canvasContainer.height());
+      console.log("Resizing...");
+      resizeCanvas(canvasContainer.width(), canvasContainer.height());
     })
 
   background(255);
