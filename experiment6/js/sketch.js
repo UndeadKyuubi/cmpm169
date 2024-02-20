@@ -29,8 +29,8 @@ function draw() {
 
   if (!isGameOver) {
     if (random() < 1 / messageFrequency) {
-      let x = random(windowWidth - 160);
-      let y = random(windowHeight - 50);
+      let x = random(canvasContainer.width() - 160);
+      let y = random(canvasContainer.height() - 50);
       let message;
       let isScary = random() < scaryMessageProbability;
       if (isScary) {
