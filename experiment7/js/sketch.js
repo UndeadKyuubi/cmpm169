@@ -1,67 +1,110 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch.js - Given a .txt file, parse it into individual words and create a heatmap based off of the frequency of every unique word.
+// Author: Brandon Jacobson
+// Date: 26 Feb. 2024
 
-// Here is how you might set up an OOP p5.js project
-// Note that p5.js looks for a file called sketch.js
+let wordCounts = {};
+let minFrequency, maxFrequency;
+let gridSize, cellSize;
+let tooltipText = '';
 
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
-
-// Globals
-let myInstance;
-let canvasContainer;
-
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
-    }
-
-    myMethod() {
-        // code to run when method is called
-    }
+function preload() {
+  loadStrings('js/data/freddy_five_bear.txt', parse);
 }
 
-// setup() function is called once when the program starts
+function parse(data) {
+  let text = data.join(' ');
+  
+  let words = text.split(/[^\w']+/);
+  
+  for (let word of words) {
+    if (word !== '') {
+      let wordLower = word.toLowerCase();
+      if (wordCounts[wordLower]) {
+        wordCounts[wordLower]++;
+      } else {
+        wordCounts[wordLower] = 1;
+      }
+    }
+  }
+  
+  console.log(wordCounts);
+}
+
 function setup() {
-    // place our canvas, making it fit our container
     canvasContainer = $("#canvas-container");
     let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
     canvas.parent("canvas-container");
-    // resize canvas is the page is resized
+  
     $(window).resize(function() {
-        console.log("Resizing...");
-        resizeCanvas(canvasContainer.width(), canvasContainer.height());
-    });
-    // create an instance of the class
-    myInstance = new MyClass(VALUE1, VALUE2);
-
-    var centerHorz = windowWidth / 2;
-    var centerVert = windowHeight / 2;
+      console.log("Resizing...");
+      resizeCanvas(canvasContainer.width(), canvasContainer.height());
+    })
 }
 
-// draw() function is called repeatedly, it's the main animation loop
 function draw() {
-    background(220);    
-    // call a method on the instance
-    myInstance.myMethod();
-
-    // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
-    noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
+  background(255);
+  
+  let uniqueWords = Object.keys(wordCounts);
+  gridSize = Math.ceil(Math.sqrt(uniqueWords.length)); 
+  
+  cellSize = width / gridSize;
+  
+  minFrequency = min(Object.values(wordCounts));
+  maxFrequency = max(Object.values(wordCounts));
+  
+  for (let i = 0; i < uniqueWords.length; i++) {
+    let word = uniqueWords[i];
+    let frequency = wordCounts[word];
+    
+    let row = Math.floor(i / gridSize);
+    let col = i % gridSize;
+    
+    let colorValue = lerpColor(color(0, 255, 0), color(255, 0, 0), map(frequency, minFrequency, maxFrequency, 0, 1));
+    
+    fill(colorValue);
+    rect(col * cellSize, row * cellSize, cellSize, cellSize);
+    
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    fill(0);
+    text(word, col * cellSize + cellSize / 2, row * cellSize + cellSize / 2);
+  }
+  
+  displayTooltip(tooltipText, mouseX, mouseY);
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
+function mouseMoved() {
+  let col = Math.floor(mouseX / cellSize);
+  let row = Math.floor(mouseY / cellSize);
+  
+  let index = row * gridSize + col;
+  
+  if (index >= 0 && index < Object.keys(wordCounts).length) {
+    let word = Object.keys(wordCounts)[index];
+    let frequency = wordCounts[word];
+    
+    if (frequency == 1) {
+      tooltipText = `${word}: ${frequency} time`;
+    }
+    else {
+      tooltipText = `${word}: ${frequency} times`;
+    }
+  }
+  else {
+    tooltipText = '';
+  }
+}
+
+function displayTooltip(tooltip, x, y) {
+  if (x + textWidth(tooltip) > width) {
+    x = mouseX - 10 - textWidth(tooltip);
+  }
+  else {
+    x = x + 10;
+  }
+  
+  textSize(20);
+  fill(0);
+  textAlign(LEFT, BOTTOM);
+  text(tooltip, x, y - 10);
 }
