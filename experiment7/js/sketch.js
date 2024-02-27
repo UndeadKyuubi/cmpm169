@@ -47,7 +47,7 @@ function draw() {
   let uniqueWords = Object.keys(wordCounts);
   gridSize = Math.ceil(Math.sqrt(uniqueWords.length)); 
   
-  cellSize = canvasContainer.width() / gridSize;
+  cellSize = min(canvasContainer.width() / gridSize, canvasContainer.height() / gridSize);
   
   minFrequency = min(Object.values(wordCounts));
   maxFrequency = max(Object.values(wordCounts));
