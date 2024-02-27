@@ -47,7 +47,7 @@ function draw() {
   let uniqueWords = Object.keys(wordCounts);
   gridSize = Math.ceil(Math.sqrt(uniqueWords.length)); 
   
-  cellSize = width / gridSize;
+  cellSize = canvasContainer.width() / gridSize;
   
   minFrequency = min(Object.values(wordCounts));
   maxFrequency = max(Object.values(wordCounts));
@@ -96,7 +96,7 @@ function mouseMoved() {
 }
 
 function displayTooltip(tooltip, x, y) {
-  if (x + textWidth(tooltip) > width) {
+  if (x + textWidth(tooltip) > canvasContainer.width()) {
     x = mouseX - 10 - textWidth(tooltip);
   }
   else {
